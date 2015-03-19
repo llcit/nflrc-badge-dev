@@ -19,6 +19,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'crispy_forms',
     'badge_site',
 )
 
@@ -62,6 +63,9 @@ STATICFILES_DIRS = (
 )
 
 TEMPLATE_DIRS = (PROJECT_DIR.child('templates'),)
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 ISSUER_REPO = 'badge-docs/issuer'
 BADGES_REPO = 'badge-docs/badges'

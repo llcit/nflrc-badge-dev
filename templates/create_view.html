@@ -1,6 +1,7 @@
 <!-- create_view.html -->
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load crispy_forms_tags %}
 
 {% block page_header_container %}{% endblock page_header_container %}
 
@@ -8,11 +9,11 @@
 <!-- ROW 1 -->
 	<div class="row">
 		<div class="col-md-12 block-center">
-			<div class="lead text-center">Create {{ object }}</div>
+			<div class="lead text-center">Create {{ object_type }}</div>
 			<div>
 				<form method="post" action=".">{% csrf_token %}
-					{{ form.as_p }}
-					<button type="submit">Add a new issuer</button>
+					{{ form|crispy }}
+					<button type="submit">Add {{ object_type }}</button>
 				</form>
 			</div>
 		</div>

@@ -6,10 +6,21 @@
 
 {% block content_container %}
 <!-- ROW 1 -->
-	<div class="row">
-		<div class="col-md-12 block-center">
+	<div class="row block-center">
+		<div class="col-md-12 text-center">
 			<div class="lead text-center">NFLRC Badges</div>
 		</div>
+		<div class="col-md-12 text-center">
+			<a class="btn btn-lg" href="{% url 'create_badge' %}">Create a badge</a>
+			<a class="btn btn-lg" href="{% url 'create_award' %}">Award a badge</a>
+		</div>
+		
+		{% for i in badge_list %}
+		<div class="col-md-4">
+			<div class="text-center"><img width="100%" src="{{ i.image }}"/></div>
+			<div class="text-center">{{ i.name }}</div>
+		</div>
+		{% endfor %}
 	</div>
 
 {% endblock content_container %}

@@ -18,7 +18,7 @@ def hashEmailAddress(email, salt):
 class Issuer(models.Model):
     # Issuing organization (e.g. CLT, NFLRC, etc.)
     guid = models.CharField(
-        max_length=10, unique=True, help_text="This is auto generated.")
+        max_length=10, unique=True, blank=True, help_text="This is auto generated and cannot be edited.")
     name = models.CharField(max_length=128)
     initials = models.CharField(max_length=32)
     url = models.CharField(max_length=128)
@@ -38,7 +38,6 @@ class Issuer(models.Model):
         return os.path.join(self.doc_path, settings.ISSUER_REPO, self.getJsonFilename())
 
     def writeIssuerFile(self):
-        self.jsonfile = self.getIssuerUrl()
         data = json.dumps(self.serialize())
         f = open(self.getIssuerPath(), 'w')
         localFile = File(f)
@@ -62,6 +61,12 @@ class Issuer(models.Model):
             "email": self.contact
         }
         return data
+
+    def save(self, *args, **kwargs):
+        if not self.jsonfile:
+            self.jsonfile = self.getIssuerUrl()
+        super(Issuer, self).save(*args, **kwargs) # Call the "real" save()
+        self.writeIssuerFile()
 
     def __unicode__(self):
         return self.name
@@ -87,7 +92,6 @@ class Badge(models.Model):
         return os.path.join(self.issuer.doc_path, settings.BADGES_REPO, self.getJsonFilename())
 
     def writeBadgeFile(self):
-        self.jsonfile = self.getBadgeUrl()
         data = json.dumps(self.serialize())
         f = open(self.getBadgePath(), 'w')
         localFile = File(f)
@@ -112,6 +116,12 @@ class Badge(models.Model):
             "issuer": self.issuer.getIssuerUrl()
         }
         return data
+
+    def save(self, *args, **kwargs):
+        if not self.jsonfile:
+            self.jsonfile = self.getBadgeUrl()
+        super(Badge, self).save(*args, **kwargs) # Call the "real" save()
+        self.writeBadgeFile()
 
     def __unicode__(self):
         return self.name
@@ -158,7 +168,6 @@ class Award(models.Model):
         return os.path.join(self.badge.issuer.doc_path, settings.AWARDS_REPO, self.getJsonFilename())
 
     def writeAssertionFile(self):
-        self.jsonfile = self.getAssertionUrl()
         data = json.dumps(self.serialize())
         f = open(self.getAssertionPath(), 'w')
         localFile = File(f)
@@ -201,6 +210,15 @@ class Award(models.Model):
             "expires": expiredate,
         }
         return assertion
+
+    def save(self, *args, **kwargs):
+        # NEED to set salt, and claimcode here as well.
+        if not self.jsonfile:
+            self.jsonfile = self.getAssertionUrl()
+            self.claimCode = getRandomString(10)
+            self.salt = getRandomString(10)
+        super(Award, self).save(*args, **kwargs) # Call the "real" save()
+        self.writeAssertionFile()
 
     def __unicode__(self):
         return self.email
