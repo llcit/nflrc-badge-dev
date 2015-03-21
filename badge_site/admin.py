@@ -3,11 +3,8 @@ import random, string
 from django.contrib import admin
 
 from .models import Issuer, Badge, Award
+from .utils import genGuid, getRandomString
 
-
-
-def getRandomString (size=12, chars=string.ascii_uppercase + string.ascii_lowercase + string.digits):
-    return ''.join(random.choice(chars) for x in range(size))
 
 
 class IssuerAdmin(admin.ModelAdmin):
@@ -19,7 +16,7 @@ class IssuerAdmin(admin.ModelAdmin):
 	def save_model(self, request, obj, form, change):		
 		if not change:
 			# Set a one-time unique id
-			obj.guid = getRandomString(10)
+			obj.guid = genGuid()
 			# Set url to the json file on intialization (first save)
 			obj.jsonfile = obj.getIssuerUrl()
 
@@ -35,7 +32,7 @@ class BadgeAdmin(admin.ModelAdmin):
 	def save_model(self, request, obj, form, change):
 		if not change:
 			# Set a one-time unique id
-			obj.guid = getRandomString(10)
+			obj.guid = genGuid()
 			# Set url to the json file on intialization (first save)
 			obj.jsonfile = obj.getBadgeUrl()
 
@@ -52,9 +49,9 @@ class AwardAdmin(admin.ModelAdmin):
 	def save_model(self, request, obj, form, change):
 		if not change:
 			# Set a one-time unique id, claimCode, and salt for this badge to random strings
-			obj.guid = getRandomString(10)
-			obj.claimCode = getRandomString(10)
-			obj.salt = getRandomString(10)
+			obj.guid = genGuid()
+			obj.claimCode = getRandomString(size=10)
+			obj.salt = getRandomString(size=10)
 			obj.jsonfile = obj.getAssertionUrl()
 
 		# Save the object, then over/write json file.

@@ -9,18 +9,47 @@
 	<div class="row block-center">
 		<div class="col-md-12 text-center">
 			<div class="lead text-center">NFLRC Badges</div>
-		</div>
-		<div class="col-md-12 text-center">
-			<a class="btn btn-lg" href="{% url 'create_badge' %}">Create a badge</a>
-			<a class="btn btn-lg" href="{% url 'create_award' %}">Award a badge</a>
+			<a class="btn btn-lg" href="{% url 'create_issuer' %}">Create a new Issuer</a>
 		</div>
 		
-		{% for i in badge_list %}
-		<div class="col-md-4">
-			<div class="text-center"><img width="100%" src="{{ i.image }}"/></div>
-			<div class="text-center">{{ i.name }}</div>
+		<div class="col-md-12">		
+		
+			
+			{% for i in issuer_list %}			
+				<div class="row">
+					<div class="col-md-3 pull-left">
+						<p><span class="lead">{{ i.name }}</span></p>
+						<p>
+							<a class="btn btn-xs" href="{% url 'edit_issuer' i.id %}">Edit</a>
+							<a class="btn btn-xs" href="">Delete</a>
+							<a class="btn btn-xs" href="{% url 'create_badge_by_issuer' issuer=i.id %}">Add a badge</a>
+						</p>
+						<p><img width="100px" src="{{ i.image }}"/></p>
+						
+					</div>
+					
+					<div class="col-md-9 pull-left">
+					{% for j in i.badges.all %}
+						<p><span class="lead">{{ j.name }}</span></p>
+						<p>
+							<a class="btn btn-xs" href="{% url 'edit_badge' j.id %}">Edit</a>
+							<a class="btn btn-xs" href="">Delete</a>
+							<a class="btn btn-xs" href="{% url 'create_award_by_badge' badge=j.id %}">Award This</a>
+						</p>
+						<p><img width="60px" src="{{ j.image }}"/></p>	
+							
+							
+					
+					{% endfor %}
+					</div>
+				</div>
+				<hr width="5px">
+			{% endfor %}
+		
 		</div>
-		{% endfor %}
+		
+
+		
 	</div>
 
 {% endblock content_container %}

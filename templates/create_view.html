@@ -8,10 +8,19 @@
 {% block content_container %}
 <!-- ROW 1 -->
 	<div class="row">
-		<div class="col-md-12 block-center">
-			<div class="lead text-center">Create {{ object_type }}</div>
+		<div class="col-md-6 block-center">
+			<div class="lead text-center">{{ parent_object }}: Existing {{ object_type }}s </div>
+			{% for i in current_objects %}
+				<div>{{ i }}</div>
+			{% endfor %}
 			<div>
-				<form method="post" action=".">{% csrf_token %}
+				
+			</div>
+		</div>
+		<div class="col-md-6 block-center">
+			<div class="lead text-center">{{ parent_object }}: Create {{ object_type }}</div>
+			<div>
+				<form method="post">{% csrf_token %}
 					{{ form|crispy }}
 					<button type="submit">Add {{ object_type }}</button>
 				</form>

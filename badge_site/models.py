@@ -1,24 +1,25 @@
 
-import os, random, string, hashlib, json
+import os, random, string, json
 
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.files import File
 from django.conf import settings
 
+from .utils import hashEmailAddress, genGuid
+
 
 def getRandomString(size=12, chars=string.ascii_uppercase + string.ascii_lowercase + string.digits):
     return ''.join(random.choice(chars) for x in range(size))
 
 
-def hashEmailAddress(email, salt):
-    return 'sha256$' + hashlib.sha256(email + salt).hexdigest()
+
 
 
 class Issuer(models.Model):
     # Issuing organization (e.g. CLT, NFLRC, etc.)
     guid = models.CharField(
-        max_length=10, unique=True, blank=True, help_text="This is auto generated and cannot be edited.")
+        max_length=24, unique=True, blank=True, help_text="This is auto generated and cannot be edited.")
     name = models.CharField(max_length=128)
     initials = models.CharField(max_length=32)
     url = models.CharField(max_length=128)
@@ -29,7 +30,7 @@ class Issuer(models.Model):
     jsonfile = models.URLField(max_length=1024, blank=True)
 
     def getJsonFilename(self):
-        return 'issuing-org-' + self.guid + '.json'
+        return 'issuer-assert-' + self.guid + '.json'
 
     def getIssuerUrl(self):
         return os.path.join(self.url, settings.ISSUER_REPO, self.getJsonFilename())
@@ -63,8 +64,11 @@ class Issuer(models.Model):
         return data
 
     def save(self, *args, **kwargs):
+        if not self.guid:
+            self.guid = genGuid()
         if not self.jsonfile:
             self.jsonfile = self.getIssuerUrl()
+        
         super(Issuer, self).save(*args, **kwargs) # Call the "real" save()
         self.writeIssuerFile()
 
@@ -73,17 +77,17 @@ class Issuer(models.Model):
 
 
 class Badge(models.Model):
-    guid = models.CharField(max_length=10, unique=True)
+    guid = models.CharField(max_length=24, unique=True)
     name = models.CharField(max_length=1024)
     image = models.URLField()
     description = models.CharField(max_length=128)
     criteria = models.URLField()
-    issuer = models.ForeignKey(Issuer)
+    issuer = models.ForeignKey(Issuer, related_name='badges')
     created = models.DateField(auto_now=True, blank=False)
     jsonfile = models.URLField(max_length=1024, blank=True)
 
     def getJsonFilename(self):
-        return 'badge-ref-' + self.issuer.initials + '-' + self.guid + '.json'
+        return 'badge-assert-' + self.guid + '.json'
 
     def getBadgeUrl(self):
         return os.path.join(self.issuer.url, settings.BADGES_REPO, self.getJsonFilename())
@@ -118,6 +122,8 @@ class Badge(models.Model):
         return data
 
     def save(self, *args, **kwargs):
+        if not self.guid:
+            self.guid = genGuid()
         if not self.jsonfile:
             self.jsonfile = self.getBadgeUrl()
         super(Badge, self).save(*args, **kwargs) # Call the "real" save()
@@ -134,12 +140,12 @@ class Award(models.Model):
     
     """
     guid = models.CharField(
-        max_length=10, unique=True, help_text="This is auto generated.")
+        max_length=24, unique=True, help_text="This is auto generated.")
     email = models.CharField(max_length=1024,
                              help_text="Email for the recipient (use the email the user intends to use with their Mozilla Backpack account).")
     firstname = models.CharField(max_length=1024)
     lastname = models.CharField(max_length=1024)
-    badge = models.ForeignKey(Badge)
+    badge = models.ForeignKey(Badge, related_name='awards')
     creator = models.ForeignKey(
         User, related_name="award_creator", blank=True, null=True,
         help_text="Specify yourself.")
@@ -159,7 +165,7 @@ class Award(models.Model):
         unique_together = ('email', 'badge')
 
     def getJsonFilename(self):
-        return 'awardee-' + self.guid + '.json'
+        return 'award-assert-' + self.guid + '.json'
 
     def getAssertionUrl(self):
         return os.path.join(self.badge.issuer.url, settings.AWARDS_REPO, self.getJsonFilename())
@@ -212,7 +218,9 @@ class Award(models.Model):
         return assertion
 
     def save(self, *args, **kwargs):
-        # NEED to set salt, and claimcode here as well.
+        if not self.guid:
+            self.guid = genGuid()
+
         if not self.jsonfile:
             self.jsonfile = self.getAssertionUrl()
             self.claimCode = getRandomString(10)
