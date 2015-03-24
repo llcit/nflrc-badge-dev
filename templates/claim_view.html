@@ -35,30 +35,9 @@
 			
 			<div class="col-md-12"><h1>To get started, please CLAIM your badge using one or both of the methods shown below.</h1></div>
 
-			<div class="col-md-4 text-center">
-				<h1 class="medtext">Option A: </h1><hr>
-				<p>Add to your Mozilla Backpack by clicking the image below. </p>
-				<p>
-					<img style="border: 1px solid gray; width: 50%; cursor: pointer" onclick="issueIt()" src="http://openbadges.org/wp-content/uploads/2013/02/badge-breakout-bottom.png">
-
-					<script type="text/javascript">
-						function issueIt() {
-							OpenBadges.issue(['{{award.getAssertionUrl}}'], function(errors, successes) {
-							});
-						}
-					</script>
-				</p>
-				<p style="font-style: oblique;">Please note that we used, <span style="color: blue">{{award.email}}</span>, when we issued your badge. Please use this email address when signing into your Backpack. Email us if you have questions about this.</p>
-			</div>
-
-			<div class="col-md-4 text-center">
-				<h1 style="text-align: center"><br><br>AND/OR</h1>
-			</div>
-
-			<div class="col-md-4 text-center">
-				<h1 class="medtext">Option B: </h1><hr>
-				<p> Download Your Badge</p>
-				<p><a href="http://backpack.openbadges.org/baker?assertion={{award.getAssertionUrl}}"><img style="border: 1px solid gray; width: 50%; cursor: pointer" onclick="issueIt()" src="{{STATIC_URL}}img/download-button.png"></a></p>
+			<div class="col-md-12 text-center">
+				<h1>Download Your Badge</h1><hr>
+				<h1><a href="http://backpack.openbadges.org/baker?assertion={{award.getAssertionUrl}}"><i class="fa fa-download fa-5x"></i></a></h1>
 				<p style="text-align: center">
 				Click to download your badge to your computer. You can then upload the badge to the backpack later or use it elsewhere as you wish.
 				</p>
@@ -71,7 +50,7 @@
 			</div>
 
 
-
+<!-- <img style="border: 1px solid gray; width: 50%; cursor: pointer" onclick="issueIt()" src=""> -->
 		</div>
 	
 	{% endif %}
