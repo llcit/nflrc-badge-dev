@@ -6,14 +6,14 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 
-
+from braces.views import StaffuserRequiredMixin
 
 from .models import Award, Issuer, Badge, Revocation
 from .forms import CreateIssuerForm, CreateBadgeForm, CreateAwardForm, ClaimCodeSubmitForm, RevokeAwardForm
 from .mixins import ClassNameMixin
 
 
-class IndexView(TemplateView):
+class IndexView(StaffuserRequiredMixin, TemplateView):
     template_name = 'index.html'
 
     def get_context_data(self, **kwargs):
@@ -53,13 +53,13 @@ class BadgeClaimCodeView(TemplateView):
 
 
 
-class IssuerListView(ClassNameMixin, ListView):
+class IssuerListView(StaffuserRequiredMixin, ClassNameMixin, ListView):
     model = Issuer
     template_name = 'list_view.html'
     class_name = 'Issuer'
 
 
-class IssuerCreateView(ClassNameMixin, CreateView):
+class IssuerCreateView(StaffuserRequiredMixin, ClassNameMixin, CreateView):
     model = Issuer
     template_name = 'create_view.html'
     form_class = CreateIssuerForm
@@ -67,7 +67,7 @@ class IssuerCreateView(ClassNameMixin, CreateView):
     class_name = 'Issuer'
 
 
-class IssuerUpdateView(ClassNameMixin, UpdateView):
+class IssuerUpdateView(StaffuserRequiredMixin, ClassNameMixin, UpdateView):
     model = Issuer
     template_name = 'update_view.html'
     success_url = reverse_lazy('badge_home')
@@ -76,13 +76,13 @@ class IssuerUpdateView(ClassNameMixin, UpdateView):
               'doc_path', 'desc', 'image', 'contact']
 
 
-class BadgeListView(ClassNameMixin, ListView):
+class BadgeListView(StaffuserRequiredMixin, ClassNameMixin, ListView):
     model = Badge
     template_name = 'list_view.html'
     class_name = 'Badge'
 
 
-class BadgeCreateView(ClassNameMixin, CreateView):
+class BadgeCreateView(StaffuserRequiredMixin, ClassNameMixin, CreateView):
     model = Badge
     template_name = 'create_badge_view.html'
     form_class = CreateBadgeForm
@@ -107,7 +107,7 @@ class BadgeCreateView(ClassNameMixin, CreateView):
         return context
 
 
-class BadgeUpdateView(ClassNameMixin, UpdateView):
+class BadgeUpdateView(StaffuserRequiredMixin, ClassNameMixin, UpdateView):
     model = Badge
     template_name = 'update_view.html'
     class_name = 'Badge'
@@ -116,7 +116,7 @@ class BadgeUpdateView(ClassNameMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy('create_badge_by_issuer', args=[self.get_object().issuer.id])
 
-class AwardListView(ClassNameMixin, ListView):
+class AwardListView(StaffuserRequiredMixin, ClassNameMixin, ListView):
     model = Award
     template_name = 'list_view.html'
     class_name = 'Award'
@@ -139,7 +139,7 @@ class AwardListView(ClassNameMixin, ListView):
         return context
 
 
-class AwardCreateView(ClassNameMixin, CreateView):
+class AwardCreateView(StaffuserRequiredMixin, ClassNameMixin, CreateView):
     model = Award
     template_name = 'create_award_view.html'
     form_class = CreateAwardForm
@@ -164,7 +164,7 @@ class AwardCreateView(ClassNameMixin, CreateView):
         return context
 
 
-class AwardUpdateView(ClassNameMixin, UpdateView):
+class AwardUpdateView(StaffuserRequiredMixin, ClassNameMixin, UpdateView):
     model = Award
     template_name = 'update_view.html'
     class_name = 'Award'
@@ -174,7 +174,7 @@ class AwardUpdateView(ClassNameMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy('create_award_by_badge', args=[self.get_object().badge.id])
 
-class RevokeAwardView(ClassNameMixin, CreateView):
+class RevokeAwardView(StaffuserRequiredMixin, ClassNameMixin, CreateView):
     model = Revocation
     template_name = 'revoke_award_view.html'
     award_to_revoke = None

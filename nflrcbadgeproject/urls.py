@@ -31,4 +31,6 @@ urlpatterns = patterns('',
     url(r'^claim/(?P<claim_code>\w+)/$', BadgeClaimCodeView.as_view(), name='claim_badge_with_code'),
 
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),
 )

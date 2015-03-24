@@ -18,3 +18,8 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+LOGIN_URL = '/accounts/login/'
+LOGOUT_URL = '/logout'
+
+LOGIN_REDIRECT_URL = '/'
