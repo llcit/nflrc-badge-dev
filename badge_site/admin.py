@@ -2,7 +2,7 @@ import random, string
 
 from django.contrib import admin
 
-from .models import Issuer, Badge, Award
+from .models import Issuer, Badge, Award, Revocation
 from .utils import genGuid, getRandomString
 
 
@@ -65,3 +65,4 @@ class AwardAdmin(admin.ModelAdmin):
 admin.site.register(Issuer, IssuerAdmin)
 admin.site.register(Badge, BadgeAdmin)
 admin.site.register(Award, AwardAdmin)
+admin.site.register(Revocation)

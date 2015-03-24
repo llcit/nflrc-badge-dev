@@ -236,6 +236,8 @@ class Revocation(models.Model):
     award = models.ForeignKey(Award)
     reason = models.CharField(max_length=512, null=False)
     revoke_date = models.DateField(auto_now=True, blank=False)
+    jsonfile = models.URLField(max_length=1024, blank=True,
+                               help_text="This is auto generated but is fully qualified url for the revocation list.")
 
     class Meta:
         unique_together = ('issuer', 'award')
@@ -244,12 +246,13 @@ class Revocation(models.Model):
         return 'revoked-award-' + self.award.guid + '.json'
 
     def getAssertionUrl(self):
-        return os.path.join(self.badge.issuer.url, settings.REVOKE_REPO, self.getJsonFilename())
+        return os.path.join(self.issuer.url, settings.REVOKE_REPO, self.getJsonFilename())
 
     def getAssertionPath(self):
-        return os.path.join(self.badge.issuer.doc_path, settings.REVOKE_REPO, self.getJsonFilename())
+        return os.path.join(self.issuer.doc_path, settings.REVOKE_REPO, self.getJsonFilename())
 
     def writeAssertionFile(self):
+        self.deleteAssertionFile()
         data = json.dumps(self.serialize())
         f = open(self.getAssertionPath(), 'w')
         localFile = File(f)
@@ -259,10 +262,14 @@ class Revocation(models.Model):
 
     def deleteAssertionFile(self):
         # Remove the file from the filesystem.
-        f = open(self.getAssertionPath(), 'w')
-        localFile = File(f)
-        if os.path.isfile(localFile.name):
-            os.remove(localFile.name)
+        try:
+            f = open(self.getAssertionPath(), 'w')
+            localFile = File(f)
+            if os.path.isfile(localFile.name):
+                os.remove(localFile.name)
+            f.closed
+        except:
+            pass
 
     def serialize(self, request=None):
         """ 
@@ -274,10 +281,20 @@ class Revocation(models.Model):
             }
         """
         revocation_list = {}
-        for i in self.objects.all().order_by('issuer'):
+        for i in Revocation.objects.all().order_by('issuer'):
             revocation_list[i.award.guid] = i.reason
         
         return revocation_list
+
+    def save(self, *args, **kwargs):
+        super(Revocation, self).save(*args, **kwargs) # Call the "real" save()
+        
+        if not self.jsonfile:
+            self.jsonfile = self.getAssertionUrl()
+            self.save()
+
+        self.writeAssertionFile()
+
 
     def __unicode__(self):
         return '%s %s %s %s' % (self.issuer, self.award.badge, self.award, self.revoke_date)

@@ -23,7 +23,7 @@ urlpatterns = patterns('',
     url(r'^award/add/(?P<badge>\d+)/$', AwardCreateView.as_view(), name='create_award_by_badge'),
     url(r'^award/edit/(?P<pk>\d+)/$', AwardUpdateView.as_view(), name='edit_award'),
     # url(r'^award/delete/(?P<pk>\d+)/$', DeleteAwardView.as_view(), name='delete_award'),
-    url(r'^award/revoke/(?P<award_to_revoke>\d+)/$', RevokeAwardView.as_view(), name='revoke_award'),
+    # url(r'^award/revoke/(?P<award_to_revoke>\d+)/$', RevokeAwardView.as_view(), name='revoke_award'),
     url(r'^awards/$', AwardListView.as_view(), name='list_awards'),
     url(r'^awards/(?P<pk>\d+)/$', AwardListView.as_view(), name='list_awards_by_badge'),
     

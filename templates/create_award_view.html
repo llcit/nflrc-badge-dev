@@ -33,7 +33,7 @@
 					 target="_blank">{{ i.jsonfile }}</a></li>
 					<li class="list-group-item"><strong>claim code: </strong> {{ i.claimCode }}</li>
 					<li class="list-group-item text-right">
-						<span class=""><a class="btn btn-xs btn-warning" href="{% url 'revoke_award' i.id %}">Revoke</a></span>
+						{% comment %}<span class=""><a class="btn btn-xs btn-warning" href="{% url 'revoke_award' i.id %}">Revoke</a></span>{% endcomment %}
 					</li>
 				</ul>
 			</p>
