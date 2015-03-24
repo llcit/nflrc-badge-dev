@@ -16,19 +16,17 @@
 			{% for i in current_objects %}
 			<p>
 				<a class="btn btn-default lead" data-toggle="collapse" href="#detail_{{ i.id }}" aria-expanded="false" aria-controls="detail_{{ i.id }}">
-					{{ i.firstname }} {{ i.lastname }} <strong>{{ i.email }}</strong> {{ i.modified }} <i class="fa fa-caret-right"></i>
+					{{ i.name }} <i class="fa fa-caret-right"></i>
 				</a>					
-				<ul id="detail_{{ i.id }}" class="list-group list-group-success collapse">
+				<ul id="detail_{{ i.id }}" class="list-group list-group-success collapse">		
 					<li class="list-group-item">
-						<a class="btn btn-xs btn-primary" href="{% url 'edit_award' i.id %}">Edit</a>
+						<a class="btn btn-xs btn-primary" href="{% url 'edit_badge' i.id %}">Edit</a>
 					</li>
-					<li class="list-group-item"><strong>evidence: </strong> <a href="{{ i.evidence }}" target="_blank">{{ i.evidence }}</a></li>
-					<li class="list-group-item"><strong>issued: </strong> {{ i.issuedOn }}</li>
-					<li class="list-group-item"><strong>issued by: </strong> {{ i.creator }}</li>
-					<li class="list-group-item"><strong>last modified: </strong> {{ i.modified }}</li>
-					<li class="list-group-item"><strong>assertion: </strong><a href="{{ i.jsonfile }}"
-					 target="_blank">{{ i.jsonfile }}</a></li>
-					<li class="list-group-item"><strong>claim code: </strong> {{ i.claimCode }}</li>
+					<li class="list-group-item list-group-item-success"><img width="120px" src="{{ i.image }}"/></li>
+					<li class="list-group-item list-group-item-success"><strong>description:</strong> {{ i.description }}</li>
+					<li class="list-group-item list-group-item-success"><strong>criteria: </strong> <a href="{{ i.criteria }}" target="_blank">{{ i.criteria }}</a></li>
+					<li class="list-group-item list-group-item-success"><strong>created: </strong> {{ j.created }}</li>
+					<li class="list-group-item list-group-item-success"><strong>assertion: </strong><a href="{{ i.jsonfile }}" target="_blank">{{ i.jsonfile }}</a></li>		
 				</ul>
 			</p>
 			{% endfor %}

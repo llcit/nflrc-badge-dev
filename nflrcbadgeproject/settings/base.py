@@ -20,6 +20,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'crispy_forms',
+    'braces',
     'badge_site',
 )
 
@@ -70,4 +71,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 ISSUER_REPO = 'badge-docs/issuer'
 BADGES_REPO = 'badge-docs/badges'
 AWARDS_REPO = 'badge-docs/earned'
+REVOKE_REPO = 'badge-docs/revoke'
 

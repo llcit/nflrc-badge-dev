@@ -22,7 +22,57 @@
 
 	{% else %}
 	
-		<div class="row"></div>
+		<div class="row">
+
+			<div class="col-md-12">
+				<p class="lead">Congratulations {{ award.firstname }}!</p>
+				<p>The <a href="http://clt.manoa.hawaii.edu">Center for Language & Technology</a> at the University of Hawaii at Manoa is proud to issue you the <span style="font-size: 1.2em">{{award.badge.name}}</span> badge to include in your <a href="http://backpack.openbadges.org/">Mozilla Backpack</a>.</p>
+				
+				<p>Not sure why you are here? Visit <a href="{{ award.badge.criteria }}" target="_blank">this page</a> to learn more about this badge and how you earned it.</p>
+
+				<p>What can you do with your badge? Visit <a href="">this page</a> for tips on how to present your badge.</p>
+			</div>
+			
+			<div class="col-md-12"><h1>To get started, please CLAIM your badge using one or both of the methods shown below.</h1></div>
+
+			<div class="col-md-4 text-center">
+				<h1 class="medtext">Option A: </h1><hr>
+				<p>Add to your Mozilla Backpack by clicking the image below. </p>
+				<p>
+					<img style="border: 1px solid gray; width: 50%; cursor: pointer" onclick="issueIt()" src="http://openbadges.org/wp-content/uploads/2013/02/badge-breakout-bottom.png">
+
+					<script type="text/javascript">
+						function issueIt() {
+							OpenBadges.issue(['{{award.getAssertionUrl}}'], function(errors, successes) {
+							});
+						}
+					</script>
+				</p>
+				<p style="font-style: oblique;">Please note that we used, <span style="color: blue">{{award.email}}</span>, when we issued your badge. Please use this email address when signing into your Backpack. Email us if you have questions about this.</p>
+			</div>
+
+			<div class="col-md-4 text-center">
+				<h1 style="text-align: center"><br><br>AND/OR</h1>
+			</div>
+
+			<div class="col-md-4 text-center">
+				<h1 class="medtext">Option B: </h1><hr>
+				<p> Download Your Badge</p>
+				<p><a href="http://backpack.openbadges.org/baker?assertion={{award.getAssertionUrl}}"><img style="border: 1px solid gray; width: 50%; cursor: pointer" onclick="issueIt()" src="{{STATIC_URL}}img/download-button.png"></a></p>
+				<p style="text-align: center">
+				Click to download your badge to your computer. You can then upload the badge to the backpack later or use it elsewhere as you wish.
+				</p>
+
+			</div>
+			<div class="col-md-12">
+				<hr>
+				<p style="text-align: center">Questions about our badge? <a mailto="{{award.badge.issuer.contact}}">{{award.badge.issuer.contact}}</a></p>
+				<p style="text-align: center">Technical questions about this site or other issue? <a mailto="llcit@hawaii.edu">llcit@hawaii.edu</a></p>
+			</div>
+
+
+
+		</div>
 	
 	{% endif %}
 

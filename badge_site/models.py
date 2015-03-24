@@ -230,3 +230,59 @@ class Award(models.Model):
 
     def __unicode__(self):
         return self.email
+
+class Revocation(models.Model):
+    issuer = models.ForeignKey(Issuer, related_name='revoked_ist')
+    award = models.ForeignKey(Award)
+    reason = models.CharField(max_length=512, null=False)
+    revoke_date = models.DateField(auto_now=True, blank=False)
+
+    class Meta:
+        unique_together = ('issuer', 'award')
+
+    def getJsonFilename(self):
+        return 'revoked-award-' + self.award.guid + '.json'
+
+    def getAssertionUrl(self):
+        return os.path.join(self.badge.issuer.url, settings.REVOKE_REPO, self.getJsonFilename())
+
+    def getAssertionPath(self):
+        return os.path.join(self.badge.issuer.doc_path, settings.REVOKE_REPO, self.getJsonFilename())
+
+    def writeAssertionFile(self):
+        data = json.dumps(self.serialize())
+        f = open(self.getAssertionPath(), 'w')
+        localFile = File(f)
+        localFile.write(data)
+        localFile.closed
+        f.closed
+
+    def deleteAssertionFile(self):
+        # Remove the file from the filesystem.
+        f = open(self.getAssertionPath(), 'w')
+        localFile = File(f)
+        if os.path.isfile(localFile.name):
+            os.remove(localFile.name)
+
+    def serialize(self, request=None):
+        """ 
+            Serializes the entire table 
+            {
+              "qp8g1s": "Issued in error",
+              "2i9016k": "Issued in error",
+              "1av09le": "Honor code violation"
+            }
+        """
+        revocation_list = {}
+        for i in self.objects.all().order_by('issuer'):
+            revocation_list[i.award.guid] = i.reason
+        
+        return revocation_list
+
+    def __unicode__(self):
+        return '%s %s %s %s' % (self.issuer, self.award.badge, self.award, self.revoke_date)
+
+
+
+
+
