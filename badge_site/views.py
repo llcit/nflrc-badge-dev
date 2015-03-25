@@ -14,7 +14,7 @@ from .mixins import ClassNameMixin
 
 
 class IndexView(StaffuserRequiredMixin, TemplateView):
-    template_name = 'index.html'
+    template_name = 'badge_index.html'
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
@@ -24,7 +24,7 @@ class IndexView(StaffuserRequiredMixin, TemplateView):
 
 
 class BadgeClaimView(FormView):
-    template_name = 'claim_view.html'
+    template_name = 'badge_claim_view.html'
     form_class = ClaimCodeSubmitForm
 
     def get_success_url(self):
@@ -43,7 +43,7 @@ class BadgeClaimView(FormView):
             return context
 
 class BadgeClaimCodeView(TemplateView):
-    template_name = 'claim_view.html'
+    template_name = 'badge_claim_view.html'
     
     def get_context_data(self, **kwargs):
         context = super(BadgeClaimCodeView, self).get_context_data(**kwargs)
@@ -55,7 +55,7 @@ class BadgeClaimCodeView(TemplateView):
 
 class IssuerListView(StaffuserRequiredMixin, ClassNameMixin, ListView):
     model = Issuer
-    template_name = 'list_view.html'
+    template_name = 'badge_list_view.html'
     class_name = 'Issuer'
 
 
@@ -69,7 +69,7 @@ class IssuerCreateView(StaffuserRequiredMixin, ClassNameMixin, CreateView):
 
 class IssuerUpdateView(StaffuserRequiredMixin, ClassNameMixin, UpdateView):
     model = Issuer
-    template_name = 'update_view.html'
+    template_name = 'badge_update_view.html'
     success_url = reverse_lazy('badge_home')
     class_name = 'Issuer'
     fields = ['name', 'initials', 'url',
@@ -78,13 +78,13 @@ class IssuerUpdateView(StaffuserRequiredMixin, ClassNameMixin, UpdateView):
 
 class BadgeListView(StaffuserRequiredMixin, ClassNameMixin, ListView):
     model = Badge
-    template_name = 'list_view.html'
+    template_name = 'badge_list_view.html'
     class_name = 'Badge'
 
 
 class BadgeCreateView(StaffuserRequiredMixin, ClassNameMixin, CreateView):
     model = Badge
-    template_name = 'create_badge_view.html'
+    template_name = 'badge_create_badge_view.html'
     form_class = CreateBadgeForm
     class_name = 'Badge'
     badge_issuer = None
@@ -109,7 +109,7 @@ class BadgeCreateView(StaffuserRequiredMixin, ClassNameMixin, CreateView):
 
 class BadgeUpdateView(StaffuserRequiredMixin, ClassNameMixin, UpdateView):
     model = Badge
-    template_name = 'update_view.html'
+    template_name = 'badge_update_view.html'
     class_name = 'Badge'
     fields = ['name', 'image', 'description', 'criteria', 'issuer']
     
@@ -118,7 +118,7 @@ class BadgeUpdateView(StaffuserRequiredMixin, ClassNameMixin, UpdateView):
 
 class AwardListView(StaffuserRequiredMixin, ClassNameMixin, ListView):
     model = Award
-    template_name = 'list_view.html'
+    template_name = 'badge_list_view.html'
     class_name = 'Award'
 
     def get_queryset(self):
@@ -141,7 +141,7 @@ class AwardListView(StaffuserRequiredMixin, ClassNameMixin, ListView):
 
 class AwardCreateView(StaffuserRequiredMixin, ClassNameMixin, CreateView):
     model = Award
-    template_name = 'create_award_view.html'
+    template_name = 'badge_create_award_view.html'
     form_class = CreateAwardForm
     class_name = 'Award'
     badge_to_award = None
@@ -166,7 +166,7 @@ class AwardCreateView(StaffuserRequiredMixin, ClassNameMixin, CreateView):
 
 class AwardUpdateView(StaffuserRequiredMixin, ClassNameMixin, UpdateView):
     model = Award
-    template_name = 'update_view.html'
+    template_name = 'badge_update_view.html'
     class_name = 'Award'
     fields = ['email', 'firstname', 'lastname',
               'badge', 'creator', 'evidence', 'expires']
@@ -176,7 +176,7 @@ class AwardUpdateView(StaffuserRequiredMixin, ClassNameMixin, UpdateView):
 
 class RevokeAwardView(StaffuserRequiredMixin, ClassNameMixin, CreateView):
     model = Revocation
-    template_name = 'revoke_award_view.html'
+    template_name = 'badge_revoke_award_view.html'
     award_to_revoke = None
     form_class = RevokeAwardForm
     class_name = 'Revocation'
